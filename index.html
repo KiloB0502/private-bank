@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101d35">
+<title>私人銀行｜Personal Bank</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon.svg">
+<style>
+:root{--navy:#070b13;--navy2:#111a29;--gold:#d7b873;--gold2:#f1d99e;--bg:#090e17;--ink:#f2eee5;--muted:#9ca6b5;--line:#3b3325;--green:#7ac6a1;--red:#e58a8a;--white:#111927}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0%,#172238 0%,#090e17 55%);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Noto Sans TC",sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}.app{max-width:480px;margin:auto;min-height:100dvh;background:linear-gradient(180deg,#0c1422,#090e17 45%);padding-bottom:90px}
+header{background:linear-gradient(145deg,#080d17,#17243a 72%,#111827);color:#f7f1e4;padding:calc(env(safe-area-inset-top) + 22px) 22px 26px;border:1px solid #7b6339;border-top:0;border-radius:0 0 26px 26px;box-shadow:0 12px 35px #0008,inset 0 1px #e5c98733}
+.top{display:flex;justify-content:space-between;align-items:center}.brand{display:flex;gap:10px;align-items:center;font-weight:750;letter-spacing:1.8px;font-size:13px}.brandmark{width:36px;height:36px;border:1px solid var(--gold);border-radius:11px;display:grid;place-items:center;color:var(--gold2);font-size:19px;box-shadow:inset 0 0 14px #d7b87318}
+.pill{font-size:10px;color:var(--gold2);border:1px solid #8c744b;padding:5px 9px;border-radius:20px;background:#d7b8730c}
+.eyebrow{font-size:10px;color:#b6aa91;letter-spacing:2px;margin-top:28px}.balance{font-size:37px;font-weight:720;letter-spacing:-1px;margin:7px 0 22px;color:#fff8e9;text-shadow:0 2px 20px #d7b87322}.balance small{font-size:16px;color:#c8b991;font-weight:500}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px}.metric{border-top:1px solid #76613c;padding-top:13px}.metric span{display:block;color:#b9b2a5;font-size:11px}.metric strong{display:block;margin-top:5px;font-size:20px;color:var(--gold2)}
+main{padding:20px 17px}.section-head{display:flex;justify-content:space-between;align-items:center;margin:4px 2px 12px}.section-head h2{font-size:15px;margin:0;color:#f4ead5}.muted{font-size:10px;color:#8f98a8;letter-spacing:.5px}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.action{border:1px solid #4b402e;background:linear-gradient(145deg,#172235,#0d1522);border-radius:16px;padding:14px 4px 12px;text-align:center;color:var(--ink);box-shadow:0 5px 16px #0004,inset 0 1px #ffffff0a}.action .ico{width:36px;height:36px;border:1px solid #806b43;border-radius:12px;background:linear-gradient(145deg,#2b2a25,#171d27);color:var(--gold2);margin:0 auto 8px;display:grid;place-items:center;font-size:18px}.action b{font-size:11px;font-weight:650}
+.card{background:linear-gradient(145deg,#151f30,#0e1623);border:1px solid #4c402d;border-radius:18px;padding:16px;margin-top:18px;box-shadow:0 6px 22px #0005,inset 0 1px #ffffff09}
+.cardhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.cardhead h3{font-size:14px;margin:0;color:#f2e8d4}.link{border:0;background:none;color:var(--gold2);font-size:11px}
+.tx{display:flex;align-items:center;gap:11px;padding:11px 0;border-top:1px solid #ffffff0d}.tx:first-of-type{border-top:0}.txicon{width:36px;height:36px;border-radius:12px;background:#252a30;border:1px solid #695536;color:var(--gold2);display:grid;place-items:center}.txdesc{flex:1;min-width:0}.txdesc b{font-size:12px;display:block;color:#f2eee5}.txdesc small{font-size:10px;color:#929cad}.amount{font-size:12px;font-weight:700}.positive{color:var(--green)}.negative{color:var(--red)}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);background:#0b111deF;backdrop-filter:blur(18px);border-top:1px solid #665333;display:grid;grid-template-columns:repeat(4,1fr);padding:9px 10px calc(env(safe-area-inset-bottom) + 8px);z-index:5}
+.nav button{border:0;background:none;color:#8993a3;font-size:10px;display:grid;gap:4px;justify-items:center}.nav button span{font-size:19px}.nav button.active{color:var(--gold2);font-weight:700}
+.page{display:none}.page.active{display:block}.formrow{display:grid;gap:6px;margin:12px 0}.formrow label{font-size:11px;color:#a5adbb}input,select{width:100%;border:1px solid #51452f;background:#0b1320;border-radius:11px;padding:12px;color:#f4ead5;outline:none}input:focus,select:focus{border-color:var(--gold)}
+.btn{width:100%;border:1px solid #e2c47e;background:linear-gradient(110deg,#a98543,#f0d79a 48%,#b58d4a);color:#17130c;padding:13px;border-radius:12px;font-weight:750;margin-top:8px;box-shadow:0 4px 16px #d7b87320}.btn.secondary{background:linear-gradient(145deg,#222c3c,#121b29);border-color:#51452f;color:#e8dcc1;box-shadow:none}.btn.danger{background:#321d25;border-color:#70404a;color:#efaaaa;box-shadow:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.statbox{padding:13px;background:#0c1522;border:1px solid #403827;border-radius:13px}.statbox small{color:#9ba5b5;font-size:10px}.statbox strong{display:block;margin-top:5px;font-size:17px;color:#f1d99e}
+.empty{text-align:center;color:#8e98a8;font-size:12px;padding:24px 8px}.modalbg{position:fixed;inset:0;background:#02050bc9;display:none;align-items:flex-end;justify-content:center;z-index:10}.modalbg.show{display:flex}.modal{background:linear-gradient(160deg,#1a2639,#0b121e);border:1px solid #806b43;border-bottom:0;width:min(480px,100%);border-radius:22px 22px 0 0;padding:22px 20px calc(env(safe-area-inset-bottom) + 24px);max-height:88dvh;overflow:auto}.modal h3{margin:0 0 16px;font-size:17px;color:#f3e6c9}.modalactions{display:flex;gap:9px;margin-top:12px}.modalactions button{flex:1}
+.toast{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:50%;transform:translate(-50%,-20px);background:#d7b873;color:#17130c;padding:10px 16px;border-radius:22px;font-size:12px;opacity:0;transition:.2s;z-index:20;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+.smallnote{font-size:10px;color:#939eaf;line-height:1.6;margin-top:12px}
+@media(min-width:600px){body{padding:20px 0}.app{border-radius:28px;overflow:hidden;min-height:850px;box-shadow:0 12px 50px #0009}.nav{bottom:20px;border-radius:0 0 28px 28px}}
+
+.premium-card{position:relative;overflow:hidden;margin:0 0 22px;padding:18px 19px 16px;min-height:176px;border-radius:19px;border:1px solid #b18d50;background:radial-gradient(ellipse at 82% 20%,#66502d66,transparent 38%),linear-gradient(125deg,#1c2636,#080d16 62%,#272116);box-shadow:0 12px 28px #0008,inset 0 1px #fff2}
+.premium-card:after{content:"";position:absolute;width:210px;height:210px;border:1px solid #d8b97835;border-radius:50%;right:-75px;top:24px;box-shadow:0 0 0 14px #d8b97809,0 0 0 30px #d8b97806;pointer-events:none}
+.premium-card-top{display:flex;justify-content:space-between;color:#d9bd82;font-size:9px;letter-spacing:1.6px;font-weight:700}
+.premium-chip{width:37px;height:27px;border:1px solid #c9aa69;border-radius:6px;margin-top:19px;background:linear-gradient(135deg,#8d7549,#e1ca8e,#80653a);display:grid;grid-template-columns:1fr 1fr;gap:1px;padding:4px;opacity:.9}
+.premium-chip span{border:1px solid #5b482b;border-radius:2px}
+.premium-number{font-size:13px;letter-spacing:2px;color:#f1e5c9;margin-top:11px}
+.premium-card-bottom{display:flex;justify-content:space-between;align-items:end;margin-top:14px;position:relative;z-index:1}
+.premium-card-bottom small{display:block;color:#a9a18f;font-size:8px;letter-spacing:1.4px;margin-bottom:4px}
+.premium-card-bottom b{font-size:11px;letter-spacing:1.4px;color:#f2e5c6}
+.card-emblem{font-size:27px;color:#e0c17c;text-shadow:0 0 18px #e0c17c66}
+
+.flow-row{display:grid;grid-template-columns:94px 1fr;align-items:center;gap:12px;margin:15px 0}
+.flow-row small{display:block;color:#9ba5b5;font-size:10px;margin-bottom:4px}
+.flow-row b{font-size:12px}
+.flow-track{height:8px;border-radius:20px;background:#080e18;border:1px solid #3e3527;overflow:hidden}
+.flow-track i{display:block;height:100%;width:0;border-radius:20px;background:linear-gradient(90deg,#9a753b,#f0d99c);transition:width .35s}
+
+.premium-card.style-champagne{background:radial-gradient(ellipse at 82% 20%,#fff0c866,transparent 38%),linear-gradient(125deg,#5c482a,#17130d 62%,#3a2a16);border-color:#e0c27d}
+.premium-card.style-midnight{background:radial-gradient(ellipse at 82% 20%,#5b78a566,transparent 38%),linear-gradient(125deg,#203653,#080f1c 62%,#172a40);border-color:#8ca8c9}
+.premium-card.style-obsidian{background:radial-gradient(ellipse at 82% 20%,#66502d66,transparent 38%),linear-gradient(125deg,#1c2636,#080d16 62%,#272116);border-color:#b18d50}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="top"><div class="brand"><div class="brandmark">✦</div><span id="bankTitle">PRIVATE BANK</span></div><span class="pill">私人帳戶 · TWD</span></div>
+ <div class="eyebrow">TOTAL ASSETS · TWD</div>
+ <div class="balance"><small>NT$</small> <span id="balance">0</span></div>
+ <div class="metrics">
+  <div class="metric"><span>可用點數 POINTS</span><strong><span id="points">0</span> P</strong></div>
+  <div class="metric"><span>累計存入 TOTAL DEPOSIT</span><strong>NT$ <span id="deposited">0</span></strong></div>
+ </div>
+</header>
+<main>
+<section id="home" class="page active">
+ <div class="premium-card">
+  <div class="premium-card-top"><span id="cardTier">✦ PRIVATE MEMBER</span><span>VIRTUAL ACCOUNT</span></div>
+  <div class="premium-chip"><span></span><span></span><span></span><span></span></div>
+  <div class="premium-number" id="cardNumber">•••• &nbsp; •••• &nbsp; •••• &nbsp; 2026</div>
+  <div class="premium-card-bottom"><div><small>ACCOUNT HOLDER</small><b id="cardHolder">PRIVATE MEMBER</b></div><div class="card-emblem">✦</div></div>
+ </div>
+ <div class="section-head"><h2>快速操作</h2><span class="muted">QUICK ACTIONS</span></div>
+ <div class="actions">
+  <button class="action" onclick="openModal('deposit')"><div class="ico">＋</div><b>存入</b></button>
+  <button class="action" onclick="openModal('withdraw')"><div class="ico">－</div><b>提取</b></button>
+  <button class="action" onclick="openModal('exchange')"><div class="ico">⇄</div><b>兌換點數</b></button>
+  <button class="action" onclick="openModal('adjustPoints')"><div class="ico">✧</div><b>調整點數</b></button>
+ </div>
+ <div class="card">
+  <div class="cardhead"><h3>帳戶概覽</h3><span class="muted">ACCOUNT OVERVIEW</span></div>
+  <div class="grid2">
+   <div class="statbox"><small>本月存入</small><strong id="monthIn">NT$ 0</strong></div>
+   <div class="statbox"><small>本月支出</small><strong id="monthOut">NT$ 0</strong></div>
+  </div>
+ </div>
+ <div class="card">
+  <div class="cardhead"><h3>最近交易</h3><button class="link" onclick="showPage('records')">查看全部 →</button></div>
+  <div id="recent"></div>
+ </div>
+</section>
+<section id="records" class="page">
+ <div class="section-head"><h2>交易明細</h2><span class="muted">TRANSACTION HISTORY</span></div>
+ <div class="card" style="margin-top:0"><div id="allRecords"></div></div>
+</section>
+<section id="stats" class="page">
+ <div class="section-head"><h2>資產統計</h2><span class="muted">WEALTH OVERVIEW</span></div>
+ <div class="card" style="margin-top:0">
+  <div class="cardhead"><h3>資產概況</h3><span class="muted">CURRENT</span></div>
+  <div class="grid2">
+   <div class="statbox"><small>目前銀行餘額</small><strong id="statBalance">NT$ 0</strong></div>
+   <div class="statbox"><small>目前點數</small><strong id="statPoints">0 P</strong></div>
+   <div class="statbox"><small>累計存入</small><strong id="statDeposits">NT$ 0</strong></div>
+   <div class="statbox"><small>累計提取</small><strong id="statWithdrawals">NT$ 0</strong></div>
+  </div>
+ </div>
+ <div class="card">
+  <div class="cardhead"><h3>本月資金流向</h3><span class="muted">THIS MONTH</span></div>
+  <div class="flow-row"><div><small>存入資產</small><b class="positive" id="statMonthIn">NT$ 0</b></div><div class="flow-track"><i id="flowInBar"></i></div></div>
+  <div class="flow-row"><div><small>提取資產</small><b class="negative" id="statMonthOut">NT$ 0</b></div><div class="flow-track"><i id="flowOutBar"></i></div></div>
+  <p class="smallnote">統計依照本機交易紀錄計算；手動調整與點數兌換會分別列在交易明細中。</p>
+ </div>
+ <div class="card">
+  <div class="cardhead"><h3>交易摘要</h3><span class="muted">LIFETIME</span></div>
+  <div class="grid2">
+   <div class="statbox"><small>交易筆數</small><strong id="statCount">0</strong></div>
+   <div class="statbox"><small>商城兌換次數</small><strong id="statRedeems">0</strong></div>
+  </div>
+ </div>
+</section>
+<section id="rewards" class="page">
+ <div class="section-head"><h2>點數與兌換</h2><span class="muted">POINTS & REWARDS</span></div>
+ <div class="card" style="margin-top:0;background:var(--navy);color:white;border:0">
+  <small style="color:#b7c3d5">目前可用點數</small><div style="font-size:30px;font-weight:750;margin-top:6px"><span id="pointsBig">0</span> <small style="font-size:13px;color:#d9bd82">P</small></div>
+ </div>
+ <div class="card"><div class="cardhead"><h3>兌換商城</h3><button class="link" onclick="openModal('addReward')">＋ 新增獎勵</button></div><div id="rewardList"></div></div>
+ <div class="card"><div class="cardhead"><h3>兌換設定</h3><span class="muted">EXCHANGE RATE</span></div>
+  <div class="formrow"><label>每多少元兌換 1 點</label><input id="rate" type="number" min="0.01" step="0.01"></div>
+  <button class="btn" onclick="saveRate()">儲存兌換比例</button>
+  <p class="smallnote">例如設定 10，代表每 NT$10 可兌換 1 點。兌換時會從銀行餘額扣除相應金額。</p>
+ </div>
+</section>
+<section id="settings" class="page">
+ <div class="section-head"><h2>帳戶設定</h2><span class="muted">PREFERENCES</span></div>
+ <div class="card" style="margin-top:0">
+  <div class="formrow"><label>銀行名稱</label><input id="bankName" maxlength="24" placeholder="例如：PRIVATE BANK"></div>
+  <div class="formrow"><label>帳戶名稱</label><input id="accountName" maxlength="24" placeholder="例如：我的專屬帳戶"></div>
+  <div class="formrow"><label>虛擬卡片號碼（16 位數字）</label><input id="virtualCardNumber" inputmode="numeric" maxlength="16" placeholder="例如：8888 2026 0000 0001"></div>
+  <div class="formrow"><label>會員等級</label><select id="memberTier"><option value="PRIVATE MEMBER">PRIVATE MEMBER</option><option value="GOLD MEMBER">GOLD MEMBER</option><option value="PLATINUM MEMBER">PLATINUM MEMBER</option><option value="BLACK DIAMOND">BLACK DIAMOND</option></select></div>
+  <div class="formrow"><label>卡片款式</label><select id="cardStyle"><option value="obsidian">曜石黑金</option><option value="champagne">香檳金</option><option value="midnight">午夜藍金</option></select></div>
+  <div class="formrow"><label>設定目前銀行餘額（NTD）</label><input id="setBalance" type="number" min="0"></div>
+  <div class="formrow"><label>設定目前點數</label><input id="setPoints" type="number" min="0"></div>
+  <button class="btn" onclick="saveSettings()">儲存帳戶設定</button>
+  <p class="smallnote">手動修改餘額或點數會自動留下「帳戶調整」紀錄，避免交易明細出現不明變動。</p>
+ </div>
+ <div class="card">
+  <div class="cardhead"><h3>安全設定</h3><span class="muted">SECURITY</span></div>
+  <div class="formrow"><label>自動鎖定時間</label><select id="lockMinutes"><option value="0">不自動鎖定</option><option value="1">1 分鐘</option><option value="5">5 分鐘</option><option value="10">10 分鐘</option><option value="30">30 分鐘</option></select></div>
+  <button class="btn secondary" onclick="changePin()">設定／變更登入 PIN</button>
+  <button class="btn secondary" onclick="lockNow()">立即鎖定</button>
+  <p class="smallnote">PIN 為介面防護，不等同 iPhone Face ID 或硬體級加密。正式原生 iOS 版本可再整合 Face ID / Keychain。</p>
+ </div>
+ <div class="card">
+  <div class="cardhead"><h3>資料管理</h3></div>
+  <button class="btn secondary" onclick="exportData()">匯出備份 JSON</button>
+  <div class="formrow"><label>還原備份 JSON</label><input type="file" id="importFile" accept=".json,application/json"></div>
+  <button class="btn secondary" onclick="importData()">匯入備份</button>
+  <button class="btn danger" onclick="resetData()">清除所有資料並重設</button>
+  <p class="smallnote">資料目前儲存在這台裝置的瀏覽器本機空間。清除 Safari 網站資料或更換裝置可能導致資料遺失，請定期匯出備份。</p>
+ </div>
+</section>
+</main>
+<nav class="nav">
+ <button class="active" data-page="home" onclick="showPage('home')"><span>⌂</span>總覽</button>
+ <button data-page="records" onclick="showPage('records')"><span>▤</span>明細</button>
+ <button data-page="stats" onclick="showPage('stats')"><span>▥</span>統計</button>
+ <button data-page="rewards" onclick="showPage('rewards')"><span>✧</span>商城</button>
+ <button data-page="settings" onclick="showPage('settings')"><span>⚙</span>設定</button>
+</nav>
+</div>
+<div class="modalbg" id="modalbg" onclick="if(event.target===this)closeModal()"><div class="modal"><h3 id="modalTitle">操作</h3><div id="modalBody"></div><div class="modalactions"><button class="btn secondary" onclick="closeModal()">取消</button><button class="btn" id="modalSubmit">確認</button></div></div></div>
+<div id="lockScreen" style="display:none;position:fixed;inset:0;z-index:30;background:radial-gradient(ellipse at 50% 15%,#1b2a42,#070b13 68%);align-items:center;justify-content:center;padding:28px;color:#f4ead5">
+ <div style="width:min(360px,100%);text-align:center">
+  <div style="width:68px;height:68px;border:1px solid #d7b873;border-radius:22px;margin:0 auto 18px;display:grid;place-items:center;color:#f1d99e;font-size:30px">✦</div>
+  <div style="letter-spacing:3px;font-size:13px">PRIVATE BANK</div>
+  <div id="lockSubtitle" style="color:#aab3c1;font-size:12px;margin:12px 0 22px">輸入 PIN 以解鎖私人帳戶</div>
+  <input id="pinInput" inputmode="numeric" pattern="[0-9]*" maxlength="8" type="password" placeholder="輸入 4–8 位數 PIN" style="text-align:center;font-size:22px;letter-spacing:9px;background:#111b2a;border-color:#806b43">
+  <button class="btn" style="margin-top:16px" onclick="submitPin()">確認解鎖</button>
+  <div id="pinError" style="color:#e58a8a;font-size:11px;margin-top:12px;min-height:16px"></div>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const KEY='privateVirtualBank.v1';
+const fmt=n=>Number(n||0).toLocaleString('zh-TW',{maximumFractionDigits:2});
+const today=()=>new Date().toISOString();
+const monthNow=()=>new Date().toISOString().slice(0,7);
+let data;
+function fresh(){return {bankName:'PRIVATE BANK',accountName:'我的專屬帳戶',virtualCardNumber:'8888202600000001',memberTier:'PRIVATE MEMBER',cardStyle:'obsidian',balance:0,points:0,totalDeposited:0,rate:10,rewards:[{id:'r1',name:'自訂小獎勵',cost:100,desc:'兌換一份小驚喜'}],transactions:[]}}
+function load(){try{data=JSON.parse(localStorage.getItem(KEY))||fresh()}catch(e){data=fresh()} if(!Array.isArray(data.transactions))data.transactions=[];if(!Array.isArray(data.rewards))data.rewards=[];data.virtualCardNumber=data.virtualCardNumber||'8888202600000001';data.memberTier=data.memberTier||'PRIVATE MEMBER';data.cardStyle=data.cardStyle||'obsidian';save()}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function tx(type,title,amount,unit='TWD',note=''){data.transactions.unshift({id:Date.now()+Math.random(),type,title,amount,unit,note,date:today()})}
+function render(){
+ document.getElementById('bankTitle').textContent=data.bankName||'PRIVATE BANK';
+ document.getElementById('cardHolder').textContent=(data.accountName||'PRIVATE MEMBER').toUpperCase();
+ document.getElementById('cardTier').textContent='✦ '+(data.memberTier||'PRIVATE MEMBER');
+ document.getElementById('cardNumber').textContent=(data.virtualCardNumber||'8888202600000001').replace(/(\\d{4})(?=\\d)/g,'$1  ·  ');
+ document.getElementById('virtualCardNumber').value=data.virtualCardNumber||'8888202600000001';
+ document.getElementById('memberTier').value=data.memberTier||'PRIVATE MEMBER';
+ document.getElementById('cardStyle').value=data.cardStyle||'obsidian';
+ document.querySelector('.premium-card').classList.remove('style-obsidian','style-champagne','style-midnight');
+ document.querySelector('.premium-card').classList.add('style-'+(data.cardStyle||'obsidian'));
+ document.getElementById('balance').textContent=fmt(data.balance);
+ document.getElementById('points').textContent=fmt(data.points);
+ document.getElementById('pointsBig').textContent=fmt(data.points);
+ document.getElementById('deposited').textContent=fmt(data.totalDeposited);
+ document.getElementById('rate').value=data.rate;
+ document.getElementById('bankName').value=data.bankName;
+ document.getElementById('accountName').value=data.accountName;
+ document.getElementById('setBalance').value=data.balance;
+ document.getElementById('setPoints').value=data.points;
+ const lm=document.getElementById('lockMinutes');if(lm)lm.value=String(security.lockMinutes??5);
+ const m=data.transactions.filter(t=>t.date.slice(0,7)===monthNow());
+ const incoming=m.filter(t=>t.type==='deposit').reduce((s,t)=>s+t.amount,0);
+ const outgoing=m.filter(t=>t.type==='withdraw'||t.type==='exchange').reduce((s,t)=>s+t.amount,0);
+ document.getElementById('monthIn').textContent='NT$ '+fmt(incoming);
+ document.getElementById('monthOut').textContent='NT$ '+fmt(outgoing);
+ document.getElementById('recent').innerHTML=recordsHTML(data.transactions.slice(0,5));
+ document.getElementById('allRecords').innerHTML=recordsHTML(data.transactions);
+ const deposits=data.transactions.filter(t=>t.type==='deposit').reduce((s,t)=>s+t.amount,0);
+ const withdrawals=data.transactions.filter(t=>t.type==='withdraw').reduce((s,t)=>s+t.amount,0);
+ const monthInValue=incoming, monthOutValue=m.filter(t=>t.type==='withdraw').reduce((s,t)=>s+t.amount,0);
+ document.getElementById('statBalance').textContent='NT$ '+fmt(data.balance);
+ document.getElementById('statPoints').textContent=fmt(data.points)+' P';
+ document.getElementById('statDeposits').textContent='NT$ '+fmt(deposits);
+ document.getElementById('statWithdrawals').textContent='NT$ '+fmt(withdrawals);
+ document.getElementById('statMonthIn').textContent='NT$ '+fmt(monthInValue);
+ document.getElementById('statMonthOut').textContent='NT$ '+fmt(monthOutValue);
+ const maxFlow=Math.max(monthInValue,monthOutValue,1);
+ document.getElementById('flowInBar').style.width=(monthInValue/maxFlow*100)+'%';
+ document.getElementById('flowOutBar').style.width=(monthOutValue/maxFlow*100)+'%';
+ document.getElementById('statCount').textContent=fmt(data.transactions.length);
+ document.getElementById('statRedeems').textContent=fmt(data.transactions.filter(t=>t.type==='redeem').length);
+
+ document.getElementById('rewardList').innerHTML=data.rewards.length?data.rewards.map(r=>`<div class="tx"><div class="txicon">🎁</div><div class="txdesc"><b>${esc(r.name)}</b><small>${esc(r.desc||'自訂獎勵')}</small></div><div style="text-align:right"><div class="amount">${fmt(r.cost)} P</div><button class="link" onclick="redeem('${r.id}')">兌換</button></div></div>`).join(''):'<div class="empty">尚未建立獎勵，點選右上角新增</div>';
+}
+function recordsHTML(list){if(!list.length)return '<div class="empty">目前還沒有交易紀錄</div>';return list.map(t=>{let icon=t.type==='deposit'?'＋':t.type==='withdraw'?'－':t.type==='exchange'?'⇄':t.type==='redeem'?'🎁':'✧';let sign=t.unit==='P'?(t.amount>=0?'+':''):(t.type==='deposit'?'+':'−');let cls=t.type==='deposit'?'positive':t.type==='withdraw'||t.type==='exchange'?'negative':'';return `<div class="tx"><div class="txicon">${icon}</div><div class="txdesc"><b>${esc(t.title)}</b><small>${new Date(t.date).toLocaleString('zh-TW',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}${t.note?' · '+esc(t.note):''}</small></div><div class="amount ${cls}">${sign}${fmt(t.amount)} ${t.unit==='P'?'P':'NT$'}</div></div>`}).join('')}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));window.scrollTo(0,0)}
+function toast(s){let e=document.getElementById('toast');e.textContent=s;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2100)}
+function closeModal(){document.getElementById('modalbg').classList.remove('show')}
+function openModal(kind,extra){
+ let title='',body='',submit=()=>{};
+ if(kind==='deposit'||kind==='withdraw'){let dep=kind==='deposit';title=dep?'存入虛擬資產':'提取虛擬資產';body=`<div class="formrow"><label>金額（NTD）</label><input id="opAmount" type="number" min="0.01" step="0.01" placeholder="輸入金額"></div><div class="formrow"><label>備註（選填）</label><input id="opNote" maxlength="60" placeholder="例如：生日獎勵"></div>`;submit=()=>{let a=Number(document.getElementById('opAmount').value),n=document.getElementById('opNote').value;if(!Number.isFinite(a)||a<=0)return toast('請輸入有效金額');if(!dep&&a>data.balance)return toast('餘額不足');data.balance+=dep?a:-a;if(dep)data.totalDeposited+=a;tx(kind,dep?'存入資產':'提取資產',a,'TWD',n);save();closeModal();toast('交易已完成')}}
+ if(kind==='exchange'){title='銀行餘額兌換點數';body=`<div class="formrow"><label>兌換金額（NTD）</label><input id="opAmount" type="number" min="0.01" step="0.01" placeholder="輸入要兌換的金額"></div><div class="smallnote">目前比例：NT$ ${fmt(data.rate)} = 1 點。兌換後點數會依比例計算。</div>`;submit=()=>{let a=Number(document.getElementById('opAmount').value);if(!a||a<=0)return toast('請輸入有效金額');if(a>data.balance)return toast('銀行餘額不足');let p=a/data.rate;data.balance-=a;data.points+=p;tx('exchange','餘額兌換點數',a,'TWD',`取得 ${fmt(p)} 點`);tx('exchange','取得兌換點數',p,'P',`使用 NT$ ${fmt(a)}`);save();closeModal();toast('點數兌換成功')}}
+ if(kind==='adjustPoints'){title='手動調整點數';body=`<div class="formrow"><label>調整方式</label><select id="pointMode"><option value="add">增加點數</option><option value="sub">扣除點數</option></select></div><div class="formrow"><label>點數</label><input id="opAmount" type="number" min="0.01" step="0.01" placeholder="輸入點數"></div><div class="formrow"><label>備註</label><input id="opNote" maxlength="60" placeholder="例如：完成任務"></div>`;submit=()=>{let a=Number(document.getElementById('opAmount').value),add=document.getElementById('pointMode').value==='add',n=document.getElementById('opNote').value;if(!a||a<=0)return toast('請輸入有效點數');if(!add&&a>data.points)return toast('點數不足');data.points+=add?a:-a;tx('points',add?'增加點數':'扣除點數',add?a:-a,'P',n);save();closeModal();toast('點數已更新')}}
+ if(kind==='addReward'){title='新增商城獎勵';body=`<div class="formrow"><label>獎勵名稱</label><input id="rewardName" maxlength="30" placeholder="例如：電影之夜"></div><div class="formrow"><label>兌換點數</label><input id="rewardCost" type="number" min="1" placeholder="例如：300"></div><div class="formrow"><label>描述（選填）</label><input id="rewardDesc" maxlength="60" placeholder="獎勵內容"></div>`;submit=()=>{let name=document.getElementById('rewardName').value.trim(),cost=Number(document.getElementById('rewardCost').value),desc=document.getElementById('rewardDesc').value;if(!name||!cost||cost<=0)return toast('請填寫名稱與有效點數');data.rewards.push({id:'r'+Date.now(),name,cost,desc});save();closeModal();toast('獎勵已新增')}}
+ document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').innerHTML=body;document.getElementById('modalSubmit').onclick=submit;document.getElementById('modalbg').classList.add('show');
+}
+function redeem(id){let r=data.rewards.find(x=>x.id===id);if(!r)return;if(data.points<r.cost)return toast('點數不足');if(!confirm(`確定使用 ${fmt(r.cost)} 點兌換「${r.name}」嗎？`))return;data.points-=r.cost;tx('redeem','兌換：'+r.name,r.cost,'P','商城兌換');save();toast('兌換成功！')}
+function saveRate(){let r=Number(document.getElementById('rate').value);if(!r||r<=0)return toast('兌換比例必須大於 0');data.rate=r;tx('settings','修改兌換比例',r,'TWD','每 NT$ '+fmt(r)+' 兌換 1 點');save();toast('兌換比例已儲存')}
+function saveSettings(){let b=Number(document.getElementById('setBalance').value),p=Number(document.getElementById('setPoints').value),bn=document.getElementById('bankName').value.trim(),an=document.getElementById('accountName').value.trim();if(!Number.isFinite(b)||b<0||!Number.isFinite(p)||p<0)return toast('餘額與點數不可小於 0');if(b!==data.balance){let d=b-data.balance;tx('adjust','手動調整銀行餘額',Math.abs(d),'TWD',`調整前 ${fmt(data.balance)} → ${fmt(b)}`)}if(p!==data.points){let d=p-data.points;tx('points',d>0?'手動增加點數':'手動扣除點數',d,'P','帳戶設定調整')}const cn=document.getElementById('virtualCardNumber').value.replace(/\\D/g,'');if(cn.length!==16)return toast('虛擬卡片號碼必須為 16 位數字');data.balance=b;data.points=p;data.bankName=bn||'PRIVATE BANK';data.accountName=an||'我的專屬帳戶';data.virtualCardNumber=cn;data.memberTier=document.getElementById('memberTier').value;data.cardStyle=document.getElementById('cardStyle').value;save();toast('帳戶與卡片設定已儲存')}
+function exportData(){let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='private-bank-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);toast('備份檔已匯出')}
+function importData(){let f=document.getElementById('importFile').files[0];if(!f)return toast('請先選擇備份檔');let r=new FileReader();r.onload=()=>{try{let v=JSON.parse(r.result);if(typeof v.balance!=='number'||!Array.isArray(v.transactions))throw Error();if(confirm('匯入會覆蓋目前資料，確定繼續？')){data={...fresh(),...v};save();toast('備份還原成功')}}catch(e){toast('檔案格式不正確')}};r.readAsText(f)}
+function resetData(){if(!confirm('確定清除所有帳戶、點數與交易紀錄？此操作無法復原。'))return;data=fresh();save();toast('已重設帳戶')}
+
+const SEC_KEY='privateVirtualBank.security.v1';
+let security={pinHash:null,salt:null,lockMinutes:5};
+let lastActivity=Date.now(), lockTimer=null;
+function readSecurity(){try{security={...security,...JSON.parse(localStorage.getItem(SEC_KEY)||'{}')}}catch(e){}}
+function saveSecurity(){localStorage.setItem(SEC_KEY,JSON.stringify(security));const el=document.getElementById('lockMinutes');if(el)el.value=String(security.lockMinutes??5)}
+async function digestPin(pin,salt){const bytes=new TextEncoder().encode(salt+':'+pin);const hash=await crypto.subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(hash)).map(x=>x.toString(16).padStart(2,'0')).join('')}
+function showLock(setup=false){const screen=document.getElementById('lockScreen');screen.style.display='flex';document.getElementById('lockSubtitle').textContent=setup?'首次使用，請設定 4–8 位數 PIN':'輸入 PIN 以解鎖私人帳戶';document.getElementById('pinInput').value='';document.getElementById('pinError').textContent='';document.getElementById('pinInput').dataset.setup=setup?'1':'0'}
+async function submitPin(){const input=document.getElementById('pinInput'),pin=input.value,setup=input.dataset.setup==='1';if(!/^\d{4,8}$/.test(pin)){document.getElementById('pinError').textContent='請輸入 4–8 位數字 PIN';return}
+ if(setup){security.salt=Array.from(crypto.getRandomValues(new Uint8Array(16))).map(x=>x.toString(16).padStart(2,'0')).join('');security.pinHash=await digestPin(pin,security.salt);saveSecurity();document.getElementById('lockScreen').style.display='none';lastActivity=Date.now();toast('PIN 已設定');return}
+ const hash=await digestPin(pin,security.salt||'');if(hash!==security.pinHash){document.getElementById('pinError').textContent='PIN 不正確，請再試一次';input.value='';return}
+ document.getElementById('lockScreen').style.display='none';lastActivity=Date.now();document.getElementById('pinError').textContent=''
+}
+function lockNow(){if(!security.pinHash){showLock(true);return}showLock(false)}
+function changePin(){if(!security.pinHash){showLock(true);return}const old=prompt('請輸入目前 PIN');if(old===null)return;digestPin(old,security.salt).then(async h=>{if(h!==security.pinHash){toast('目前 PIN 不正確');return}const next=prompt('請設定新的 4–8 位數 PIN');if(next===null)return;if(!/^\d{4,8}$/.test(next)){toast('PIN 必須為 4–8 位數字');return}security.salt=Array.from(crypto.getRandomValues(new Uint8Array(16))).map(x=>x.toString(16).padStart(2,'0')).join('');security.pinHash=await digestPin(next,security.salt);saveSecurity();toast('PIN 已更新')})}
+function resetLockTimer(){lastActivity=Date.now();if(lockTimer)clearTimeout(lockTimer);const mins=Number(security.lockMinutes||0);if(mins>0&&security.pinHash)lockTimer=setTimeout(()=>showLock(false),mins*60000)}
+['click','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,()=>{if(document.getElementById('lockScreen').style.display!=='flex')resetLockTimer()},{passive:true}));
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&security.pinHash&&Number(security.lockMinutes)>0)showLock(false)});
+readSecurity();
+
+load();render();saveSecurity();if(!security.pinHash)showLock(true);else resetLockTimer();document.getElementById('lockMinutes').addEventListener('change',e=>{security.lockMinutes=Number(e.target.value);saveSecurity();resetLockTimer();toast('自動鎖定設定已更新')});
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script>
+</body>
+</html>
